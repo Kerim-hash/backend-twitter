@@ -14,7 +14,7 @@ import { createTweetValidations } from './validations/createTweet';
 // midlewares
 // import { upload } from "./core/upload-photo"
 const storage = multer.memoryStorage()
-const upload = multer({storage})
+const upload = multer({ storage })
 const app = express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -53,7 +53,7 @@ app.patch('/tweet/like/:id', passport.authenticate('jwt'), TweetsCtrl.like)
 app.post('/uploud', upload.single("image"), UploudCtrl.index)
 
 
-
-app.listen(5000, () => {
-        console.log(5000)
+let port = process.env.PORT || 5000
+app.listen(port, () => {
+        console.log(port)
 })
