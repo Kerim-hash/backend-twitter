@@ -99,7 +99,7 @@ class UserController {
                         res.status(201).json({
                             status: 'success',
                             message: "Sucessfuly Created User",
-                            link: `http://localhost:8080/auth/verify?hash=${data.confirm_hash}`
+                            link: `https://twitter-2022.herokuapp.com/auth/verify?hash=${data.confirm_hash}`
                         })
                     }
                 }
@@ -138,7 +138,7 @@ class UserController {
 </style>
   <body>
       <h1> 🎉🎉Ваш аккаунт Twitter успешно подтвержден🎉🎉</h1>
-      <h3>Перейти на  <a href="http://localhost:3000/auth">сайт</a></h3>
+      <h3>Перейти на  <a href="https://ubiquitous-dango-78ed99.netlify.app/auth">сайт</a></h3>
   </body>
   <html>`);
             } else {
