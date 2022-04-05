@@ -7,18 +7,19 @@ export interface TweetModelInterface {
     user: UserModelInterface;
     images: string[];
     likes: string[],
-    liked: boolean
+    comment: any,
+    bookmarks: string[],
 }
 
 export type TweetModelDocumentInterface = TweetModelInterface & Document
-
 
 const TweetSchema = new Schema<TweetModelInterface>({
     text: { required: true, type: String, maxlength: 280},
     images: [{type: String}],
     user: { required: true, type: Schema.Types.ObjectId, ref: "User" },
     likes: [{type: String}],
-    liked: {required: true, default: false, type: Boolean}
+    bookmarks: [{type: String}],
+    comment: [{type: Schema.Types.ObjectId, ref: 'Comment'}]
 }, {
     timestamps : true
 });

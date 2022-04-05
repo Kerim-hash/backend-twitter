@@ -20,19 +20,27 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(cors())
-// 
+ 
 // require routes
 import { TweetsCtrl } from './controllers/TweetsController';
 import { UploudCtrl } from './controllers/UploudImg';
 import { UserCtrl } from './controllers/UserController'
+import { MessageCtrl } from './controllers/Message';
+import { ConversationCtrl } from './controllers/Conversation';
 
 // routes
-// auth and User
+
+//  User
 app.get('/users', UserCtrl.index)
 app.get('/users/me', passport.authenticate('jwt', { session: false }), UserCtrl.getUserInfo)
-
 app.get('/users/:id', UserCtrl.show)
+app.get('/users/withoutDetails/:id', UserCtrl.withoutDetailsShow)
 
+app.put('/users/follow/:id', UserCtrl.follow)
+app.put('/users/bookmarks/:id', UserCtrl.bookmarks)
+app.put('/users/unfollow/:id', UserCtrl.unfollow)
+
+// auth
 app.post('/auth/register', registerValidations, UserCtrl.create)
 app.get('/auth/verify', UserCtrl.verify)
 app.post('/auth/login', passport.authenticate('local'), UserCtrl.login)
@@ -44,14 +52,18 @@ app.get('/tweet/user/:id', TweetsCtrl.getUserTweets)
 app.delete('/tweet/:id', passport.authenticate('jwt'), TweetsCtrl.delete)
 app.post('/tweets', passport.authenticate('jwt'), createTweetValidations, upload.single("photo"), TweetsCtrl.create)
 app.patch('/tweet/:id', passport.authenticate('jwt'), TweetsCtrl.update)
-
+app.post('/tweet/comment/:id', passport.authenticate('jwt'), TweetsCtrl.addNewComment)
 app.patch('/tweet/like/:id', passport.authenticate('jwt'), TweetsCtrl.like)
 
-// app.patch('/tweet/:id', passport.authenticate('jwt'), TweetsCtrl.update)
 
 // Uploud
 app.post('/uploud', upload.single("image"), UploudCtrl.index)
-
+// conversation
+app.post('/conversation',  ConversationCtrl.index)
+app.get('/conversation/:userId',  ConversationCtrl.show)
+// message
+app.post('/message',  MessageCtrl.index)
+app.get('/message/:conversationId',  MessageCtrl.show)
 
 let port = process.env.PORT || 5000
 app.listen(port, () => {
