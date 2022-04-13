@@ -15,10 +15,11 @@ export interface UserModelInterface {
   tweets?: string[],
   followers?: string[],
   followings?: string[],
-  desc?: string,
   city?: string,
+  avatar?: string,
   liked?: string[],
   bookmarks?: string[],
+  bgImage?: string
 }
 
 export type UserModelDocumentInterface = UserModelInterface & Document
@@ -31,13 +32,14 @@ const UserSchema = new Schema<UserModelInterface>({
   password: { type: String, require: true, },
   confirm_hash: { type: String, require: true },
   confirmed: { type: Boolean, default: false, },
-  about: String,
   location: String,
+  avatar: String,
+  bgImage: String,
   website: String,
   tweets: [{ type: Schema.Types.ObjectId, ref: "Tweet" }],
   liked: [{ type: Schema.Types.ObjectId, ref: "Tweet" }],
   bookmarks: [{ type: Schema.Types.ObjectId, ref: "Tweet" }],
-  desc: {type: String,max: 50},
+  about: {type: String,max: 50},
   city: {type: String,max: 50},
   followers:[{ type: Schema.Types.ObjectId, ref: "User" }],
   followings:[{ type: Schema.Types.ObjectId, ref: "User" }],

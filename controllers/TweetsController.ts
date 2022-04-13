@@ -20,7 +20,7 @@ class TweetsController {
             });
         }
     }
-
+   
     async show(req: express.Request, res: express.Response): Promise<void> {
         try {
             const tweetId = req.params.id
@@ -166,7 +166,6 @@ class TweetsController {
         }
     }
 
-    
     async update(req: express.Request, res: express.Response): Promise<void> {
         try {
             const user = req.user as UserModelDocumentInterface;
@@ -233,7 +232,28 @@ class TweetsController {
         }
     }
 
+    async bookmarks(req: express.Request, res: express.Response): Promise<void> {
+        try {
+            const userId = req.params.id
 
+            if (!isValidObjectId(userId)) {
+                res.status(404).send()
+                return
+            }
+
+            const tweet = await UserModel.find({_id: userId}).exec()
+            res.json({
+                status: 'success',
+                data: tweet
+            })
+
+        } catch (err) {
+            res.status(500).send({
+                status: 'error',
+                errors: err
+            });
+        }
+    }
 }
 
 

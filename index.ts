@@ -32,6 +32,8 @@ import { ConversationCtrl } from './controllers/Conversation';
 
 //  User
 app.get('/users', UserCtrl.index)
+app.put('/users/update/', passport.authenticate('jwt'),  UserCtrl.update)
+app.get('/users/search/:username', UserCtrl.search)
 app.get('/users/me', passport.authenticate('jwt', { session: false }), UserCtrl.getUserInfo)
 app.get('/users/:id', UserCtrl.show)
 app.get('/users/withoutDetails/:id', UserCtrl.withoutDetailsShow)
@@ -47,6 +49,7 @@ app.post('/auth/login', passport.authenticate('local'), UserCtrl.login)
 
 // Tweeter 
 app.get('/tweets', TweetsCtrl.index)
+app.get('/tweets/bookmarks/:id', TweetsCtrl.bookmarks)
 app.get('/tweet/:id', TweetsCtrl.show)
 app.get('/tweet/user/:id', TweetsCtrl.getUserTweets)
 app.delete('/tweet/:id', passport.authenticate('jwt'), TweetsCtrl.delete)
@@ -61,6 +64,7 @@ app.post('/uploud', upload.single("image"), UploudCtrl.index)
 // conversation
 app.post('/conversation',  ConversationCtrl.index)
 app.get('/conversation/:userId',  ConversationCtrl.show)
+app.delete('/conversation/:id',  passport.authenticate('jwt'), ConversationCtrl.deleteConversation)
 // message
 app.post('/message',  MessageCtrl.index)
 app.get('/message/:conversationId',  MessageCtrl.show)

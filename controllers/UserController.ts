@@ -30,6 +30,70 @@ class UserController {
             });
         }
     }
+    async update(req: express.Request, res: express.Response): Promise<void> {
+        try {
+            const user = req.user as UserModelDocumentInterface;
+
+            if (user) {
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                    res.status(400).json({ status: 'error', errors: errors.array() });
+                    return
+                }
+                const userId = req.body.id
+                const userData = await UserModel.findById(userId)
+                if (userData) {
+                    if (String(userData._id) === String(user._id)) {
+                        const userUP = await UserModel.findOneAndUpdate({ _id: req.body.id }, {
+                            $set: {
+                                avatar: req.body.avatar,
+                                about: req.body.about,
+                                location: req.body.location,
+                                fullname: req.body.fullname,
+                                website: req.body.website,
+                                bgImage: req.body.bgImage,
+                            }
+                        },
+                            { unsert: true }
+                        ).populate('bookmarks')
+
+                        res.status(200).send({
+                            status: 'success',
+                            data: userUP
+                        });
+                    }
+                    else {
+                        res.status(403).send()
+                    }
+                } else {
+                    res.status(404).send()
+                }
+            }
+
+        } catch (err: any) {
+            res.status(500).send({
+                status: 'error',
+                message: err.message
+            });
+        }
+    }
+    async search(req: express.Request, res: express.Response): Promise<void> {
+        try {
+            const users = await UserModel.find({username: {$regex: req.params.username, $options: "$i"}}).exec()
+
+            res.json({
+                status: 'success',
+                data: users
+            })
+
+
+        } catch (err) {
+            res.status(500).send({
+                status: 'error',
+                errors: err
+            });
+        }
+    }
     // Request Get User By id
     async show(req: express.Request, res: express.Response): Promise<void> {
         try {
@@ -208,16 +272,14 @@ class UserController {
         try {
             const user: any = req.user ? (req.user as UserModelDocumentInterface).toJSON() : undefined
             if(user) {
-                const userData: any = await UserModel.findById(user._id).populate('bookmarks')
-                // const userDataBookmarks = await TweetModel.
-                // userData.find({ bookmarks})
-                // const array = await userData.bookmarks.map((item: any) => TweetModel.findById('6245969aef29d746626077c3'))
+                // const userData: any = await UserModel.findById(user._id).getPopulatedPaths({path: 'bookmarks'})
 
-                // console.log(array)
+                const query = await UserModel.findById(user._id).populate({path: 'bookmarks'})
+                  
+                // console.log("Populate:", query?.populated);
                 res.json({
                     status: 'success',
-                    data: userData,
-                    // userDataBookmarks: array
+                    data: query,
                 })
             }else{
                 res.status(500).send({
@@ -297,11 +359,11 @@ class UserController {
                     if (!user?.bookmarks?.includes(req.body.tweetID)) {
                         await tweet?.updateOne({ $push: { bookmarks: req.params.id } });
                         await user?.updateOne({ $push: { bookmarks: req.body.tweetID } });
-                        res.status(200).json({ message: "tweet bookmarksed", bookmarks: true });
+                        res.status(200).json({ message: "tweet bookmarksed", tweetID: req.body.tweetID, userID: req.params.id });
                     } else {
                         await tweet?.updateOne({ $pull: { bookmarks: req.params.id } });
                         await user?.updateOne({ $pull: { bookmarks: req.body.tweetID } });
-                        res.status(200).json({ message: "tweet unbookmarksed", bookmarks: true });
+                        res.status(200).json({ message: "tweet unbookmarksed",tweetID: req.body.tweetID, userID: req.params.id });
                     }
                 } catch (err) {
                     res.status(500).json(err);
