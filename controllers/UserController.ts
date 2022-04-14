@@ -5,7 +5,6 @@ import { UserModel } from '../models/UserModel';
 import mailer from '../core/mailer'
 import { SentMessageInfo } from "nodemailer/lib/sendmail-transport";
 import { UserModelInterface, UserModelDocumentInterface } from '../models/UserModel'
-
 import jwt from 'jsonwebtoken'
 import { isValidObjectId } from '../utils/isValidObjectId';
 import { TweetModel } from '../models/TweetModel';
@@ -19,7 +18,7 @@ class UserController {
 
             res.json({
                 status: 'success',
-                data: users
+                data: users.splice(0, 3)
             })
 
 
@@ -376,8 +375,6 @@ class UserController {
             });
         }
     }
-
-
 }
 
 
