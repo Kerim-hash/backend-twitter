@@ -31,7 +31,7 @@ import { ConversationCtrl } from './controllers/Conversation';
 // routes
 
 //  User
-app.get('/users', UserCtrl.index)
+app.get('/users', passport.authenticate('jwt', { session: false }), UserCtrl.index)
 app.put('/users/update/', passport.authenticate('jwt'),  UserCtrl.update)
 app.get('/users/search/:username', UserCtrl.search)
 app.get('/users/me', passport.authenticate('jwt', { session: false }), UserCtrl.getUserInfo)

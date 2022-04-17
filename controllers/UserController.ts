@@ -13,12 +13,13 @@ import { TweetModel } from '../models/TweetModel';
 class UserController {
     // Request Get All User
     async index(req: express.Request, res: express.Response): Promise<void> {
+        const user: any = req.user ? (req.user as UserModelDocumentInterface).toJSON() : undefined
         try {
             const users = await UserModel.find({}).exec()
-
+           
             res.json({
                 status: 'success',
-                data: users.splice(0, 3)
+                data: users.filter(item => String(item._id) !== String(user._id)).splice(0, 3)
             })
 
 
@@ -78,7 +79,7 @@ class UserController {
     }
     async search(req: express.Request, res: express.Response): Promise<void> {
         try {
-            const users = await UserModel.find({username: {$regex: req.params.username, $options: "$i"}}).exec()
+            const users = await UserModel.find({ username: { $regex: req.params.username, $options: "$i" } }).exec()
 
             res.json({
                 status: 'success',
@@ -270,22 +271,22 @@ class UserController {
     async getUserInfo(req: express.Request, res: express.Response): Promise<void> {
         try {
             const user: any = req.user ? (req.user as UserModelDocumentInterface).toJSON() : undefined
-            if(user) {
+            if (user) {
                 // const userData: any = await UserModel.findById(user._id).getPopulatedPaths({path: 'bookmarks'})
 
-                const query = await UserModel.findById(user._id).populate({path: 'bookmarks'})
-                  
+                const query = await UserModel.findById(user._id).populate({ path: 'bookmarks' })
+
                 // console.log("Populate:", query?.populated);
                 res.json({
                     status: 'success',
                     data: query,
                 })
-            }else{
+            } else {
                 res.status(500).send({
                     status: 'error',
                 });
             }
-           
+
         } catch (err) {
             res.status(500).send({
                 status: 'error',
@@ -298,14 +299,14 @@ class UserController {
         try {
             if (req.body.userId !== req.params.id) {
                 try {
-                    const user = await UserModel.findById(req.params.id);
-                    const currentUser = await UserModel.findById(req.body.userID);
-                    if (user?.followers?.includes(req.body.userID)) {
+                    const currentUser = await UserModel.findById(req.params.id);
+                    // kfghgfgh
+                    const user = await UserModel.findById(req.body.userID);
 
-                        await user?.updateOne({ $pull: { followers: req.body.userID } });
-                        await currentUser?.updateOne({ $pull: { followings: req.params.id } });
-
-                        res.status(200).json({ message: "user has been unfollowed", followed: false, follower: req.params.id, status: true });
+                    if (user?.followers?.includes(req.params.id)) {
+                        await user?.updateOne({ $pull: { followers: req.params.id } });
+                        await currentUser?.updateOne({ $pull: { followings: req.body.userID } });
+                        res.status(200).json({ message: "user has been unfollowed", followed: false, follower: req.body.userID, status: true });
                     } else {
                         res.status(403).json("you allready follow this user");
                     }
@@ -327,11 +328,9 @@ class UserController {
                 try {
                     const user: any = await UserModel.findById(req.params.id);
                     const currentUser = await UserModel.findById(req.body.userID);
-                    if (!user?.followers?.includes(req.body.userID)) {
-                        await user?.updateOne({ $push: { followers: currentUser } });
-
-                        await currentUser?.updateOne({ $push: { followings: req.params.id } });
-
+                    if (!user?.followings?.includes(req.body.userID)) {
+                        await user?.updateOne({ $push: { followings: currentUser } });
+                        await currentUser?.updateOne({ $push: { followers: req.params.id } });
                         res.status(200).json({ message: "user has been followed", followed: true, follower: req.params.id, status: true });
                     } else {
                         res.status(403).json("you allready follow this user");
@@ -354,7 +353,7 @@ class UserController {
                 try {
                     const user: any = await UserModel.findById(req.params.id);
                     const tweet = await TweetModel.findById(req.body.tweetID);
-                    
+
                     if (!user?.bookmarks?.includes(req.body.tweetID)) {
                         await tweet?.updateOne({ $push: { bookmarks: req.params.id } });
                         await user?.updateOne({ $push: { bookmarks: req.body.tweetID } });
@@ -362,7 +361,7 @@ class UserController {
                     } else {
                         await tweet?.updateOne({ $pull: { bookmarks: req.params.id } });
                         await user?.updateOne({ $pull: { bookmarks: req.body.tweetID } });
-                        res.status(200).json({ message: "tweet unbookmarksed",tweetID: req.body.tweetID, userID: req.params.id });
+                        res.status(200).json({ message: "tweet unbookmarksed", tweetID: req.body.tweetID, userID: req.params.id });
                     }
                 } catch (err) {
                     res.status(500).json(err);
