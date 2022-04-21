@@ -30,6 +30,7 @@ class UserController {
             });
         }
     }
+   
     async update(req: express.Request, res: express.Response): Promise<void> {
         try {
             const user = req.user as UserModelDocumentInterface;
@@ -77,6 +78,7 @@ class UserController {
             });
         }
     }
+  
     async search(req: express.Request, res: express.Response): Promise<void> {
         try {
             const users = await UserModel.find({ username: { $regex: req.params.username, $options: "$i" } }).exec()
@@ -123,6 +125,7 @@ class UserController {
             });
         }
     }
+
     async withoutDetailsShow(req: express.Request, res: express.Response): Promise<void> {
         try {
             const userId = req.params.id
@@ -252,9 +255,9 @@ class UserController {
 
     async login(req: express.Request, res: express.Response): Promise<void> {
         try {
-            const user = req.user ? (req.user as UserModelDocumentInterface).toJSON() : undefined
+            // const user = req.user ? (req.user as UserModelDocumentInterface).toJSON() : undefined
             res.json({
-                ...user,
+                // ...user,
                 token: jwt.sign({ data: req.user }, process.env.SECKRET_KEY || '8D@UID@2d22erf', {
                     expiresIn: 604800,
                 })

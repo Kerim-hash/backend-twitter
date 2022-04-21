@@ -45,7 +45,7 @@ app.put('/users/unfollow/:id', UserCtrl.unfollow)
 // auth
 app.post('/auth/register', registerValidations, UserCtrl.create)
 app.get('/auth/verify', UserCtrl.verify)
-app.post('/auth/login', passport.authenticate('local'), UserCtrl.login)
+app.post('/auth/login', passport.authenticate('local'),  UserCtrl.login)
 
 // Tweeter 
 app.get('/tweets', TweetsCtrl.index)
