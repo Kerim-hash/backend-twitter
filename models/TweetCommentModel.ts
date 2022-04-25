@@ -4,7 +4,7 @@ export interface TweetCommentModelInterface {
     text?: string;
     images?: string[];
     TweetID: string,
-    // user: UserModelInterface,
+    avatar: string,
     username: string,
     fullname: string
 }
@@ -15,7 +15,8 @@ const TweetCommentSchema = new Schema ({
     images: [{type: String}],
     TweetID: {type: Schema.Types.ObjectId, ref: "Tweet"},
     username: {type: String},
-    fullname: {type: String}
+    fullname: {type: String},
+    avatar: {type: String},
 },{
     timestamps : true
 });

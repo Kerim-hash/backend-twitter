@@ -24,7 +24,7 @@ class TweetsController {
     async show(req: express.Request, res: express.Response): Promise<void> {
         try {
             const tweetId = req.params.id
-            const tweet = await TweetModel.findById(tweetId).populate('user comment').sort({ 'createdAt': '-1' }).exec()
+            const tweet = await TweetModel.findById(tweetId).populate('user comment').populate({path: 'comment'}).sort({ 'createdAt': '-1' }).exec()
             
             res.json({
                 status: 'success',
@@ -119,7 +119,7 @@ class TweetsController {
             const comment = new TweetCommentModel()
             comment.text = req.body.text;
             comment.productID = req.params.id;
-            // comment.user = req.body.userID
+            comment.avatar = req.body.avatar
             comment.images = req.body.images;
             comment.username = req.body.username;
             comment.fullname = req.body.fullname;
