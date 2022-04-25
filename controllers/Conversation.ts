@@ -44,6 +44,24 @@ class ConversationController {
             });
         }
     }
+    async getConversationById(req: express.Request, res: express.Response): Promise<void> {
+        try {
+             
+            const conversation = await ConversationModel.findById(req.params.id)
+
+            res.json({
+                status: 'success',
+                data: conversation
+            })
+
+
+        } catch (err) {
+            res.status(500).send({
+                status: 'error',
+                errors: err
+            });
+        }
+    }
     async deleteConversation(req: express.Request, res: express.Response): Promise<void> {
         try {
             const user = req.user as UserModelDocumentInterface;

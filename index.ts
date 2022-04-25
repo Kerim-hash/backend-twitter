@@ -64,6 +64,7 @@ app.post('/uploud', upload.single("image"), UploudCtrl.index)
 // conversation
 app.post('/conversation',  ConversationCtrl.index)
 app.get('/conversation/:userId',  ConversationCtrl.show)
+app.get('/conversation/detail/:id',  ConversationCtrl.getConversationById)
 app.delete('/conversation/:id',  passport.authenticate('jwt'), ConversationCtrl.deleteConversation)
 // message
 app.post('/message',  MessageCtrl.index)
