@@ -33,7 +33,7 @@ import { ConversationCtrl } from './controllers/Conversation';
 //  User
 app.get('/users', passport.authenticate('jwt', { session: false }), UserCtrl.index)
 app.put('/users/update/', passport.authenticate('jwt'),  UserCtrl.update)
-app.get('/users/search/:username', UserCtrl.search)
+app.get('/users/search/:username',passport.authenticate('jwt'), UserCtrl.search)
 app.get('/users/me', passport.authenticate('jwt', { session: false }), UserCtrl.getUserInfo)
 app.get('/users/:id', UserCtrl.show)
 app.get('/users/withoutDetails/:id', UserCtrl.withoutDetailsShow)

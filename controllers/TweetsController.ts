@@ -124,7 +124,7 @@ class TweetsController {
             comment.username = req.body.username;
             comment.fullname = req.body.fullname;
 
-            await TweetModel.findByIdAndUpdate({ _id: req.params.id }, { $push: { comment: comment._id } })
+            await TweetModel.findByIdAndUpdate({ _id: req.params.id }, { $push: { comment: comment._id,  $position: 0},  })
             
             const saveComment = await comment.save()
 

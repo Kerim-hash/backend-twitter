@@ -16,13 +16,10 @@ class UserController {
         const user: any = req.user ? (req.user as UserModelDocumentInterface).toJSON() : undefined
         try {
             const users = await UserModel.find({}).exec()
-           
             res.json({
                 status: 'success',
-                data: users.filter(item => String(item._id) !== String(user._id)).splice(0, 3)
+                data: users.filter(item => String(item._id) !== String(user._id)).reverse().splice(0,3)
             })
-
-
         } catch (err) {
             res.status(500).send({
                 status: 'error',
@@ -80,12 +77,12 @@ class UserController {
     }
   
     async search(req: express.Request, res: express.Response): Promise<void> {
+        const user: any = req.user ? (req.user as UserModelDocumentInterface).toJSON() : undefined
         try {
             const users = await UserModel.find({ username: { $regex: req.params.username, $options: "$i" } }).exec()
-
             res.json({
-                status: 'success',
-                data: users
+                statusk: 'success',
+                data: users.filter(item => String(item._id) !== String(user._id))
             })
 
 
@@ -106,7 +103,7 @@ class UserController {
                 return
             }
 
-            const user = await UserModel.findById(userId).populate('followers followings liked').exec()
+            const user = await UserModel.findById(userId).populate('followers followings liked').populate({path: 'liked'}).exec()
 
             if (!user) {
                 res.status(400).send()
@@ -275,11 +272,8 @@ class UserController {
         try {
             const user: any = req.user ? (req.user as UserModelDocumentInterface).toJSON() : undefined
             if (user) {
-                // const userData: any = await UserModel.findById(user._id).getPopulatedPaths({path: 'bookmarks'})
-
                 const query = await UserModel.findById(user._id).populate({ path: 'bookmarks' })
 
-                // console.log("Populate:", query?.populated);
                 res.json({
                     status: 'success',
                     data: query,
