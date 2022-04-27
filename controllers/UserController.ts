@@ -297,13 +297,12 @@ class UserController {
             if (req.body.userId !== req.params.id) {
                 try {
                     const currentUser = await UserModel.findById(req.params.id);
-                    // kfghgfgh
                     const user = await UserModel.findById(req.body.userID);
 
                     if (user?.followers?.includes(req.params.id)) {
                         await user?.updateOne({ $pull: { followers: req.params.id } });
                         await currentUser?.updateOne({ $pull: { followings: req.body.userID } });
-                        res.status(200).json({ message: "user has been unfollowed", followed: false, follower: req.body.userID, status: true });
+                        res.status(200).json({ message: "user has been unfollowed", followed: false, follower: req.body.userID, following:req.params.id, status: true });
                     } else {
                         res.status(403).json("you allready follow this user");
                     }
@@ -328,7 +327,7 @@ class UserController {
                     if (!user?.followings?.includes(req.body.userID)) {
                         await user?.updateOne({ $push: { followings: currentUser } });
                         await currentUser?.updateOne({ $push: { followers: req.params.id } });
-                        res.status(200).json({ message: "user has been followed", followed: true, follower: req.params.id, status: true });
+                        res.status(200).json({ message: "user has been followed", followed: true, following:req.body.userID, follower: req.params.id, status: true });
                     } else {
                         res.status(403).json("you allready follow this user");
                     }
