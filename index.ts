@@ -1,13 +1,10 @@
 import dotenv from 'dotenv'
 dotenv.config()
-
 import './core/db'
-
 import express from 'express';
 import multer from 'multer'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-
 import { registerValidations } from './validations/register';
 import { passport } from './core/passport';
 import { createTweetValidations } from './validations/createTweet';
@@ -20,7 +17,6 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(cors())
- 
 // require routes
 import { TweetsCtrl } from './controllers/TweetsController';
 import { UploudCtrl } from './controllers/UploudImg';
