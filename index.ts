@@ -8,8 +8,6 @@ import cors from 'cors'
 import { registerValidations } from './validations/register';
 import { passport } from './core/passport';
 import { createTweetValidations } from './validations/createTweet';
-// midlewares
-// import { upload } from "./core/upload-photo"
 const storage = multer.memoryStorage()
 const upload = multer({ storage })
 const app = express();
