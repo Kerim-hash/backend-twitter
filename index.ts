@@ -40,7 +40,6 @@ app.put('/users/unfollow/:id', UserCtrl.unfollow)
 app.post('/auth/register', registerValidations, UserCtrl.create)
 app.get('/auth/verify', UserCtrl.verify)
 app.post('/auth/login', passport.authenticate('local'),  UserCtrl.login)
-
 // Tweeter 
 app.get('/tweets', TweetsCtrl.index)
 app.get('/tweets/bookmarks/:id', TweetsCtrl.bookmarks)
@@ -51,7 +50,6 @@ app.post('/tweets', passport.authenticate('jwt'), createTweetValidations, upload
 app.patch('/tweet/:id', passport.authenticate('jwt'), TweetsCtrl.update)
 app.post('/tweet/comment/:id', passport.authenticate('jwt'), TweetsCtrl.addNewComment)
 app.patch('/tweet/like/:id', passport.authenticate('jwt'), TweetsCtrl.like)
-
 
 // Uploud
 app.post('/uploud', upload.single("image"), UploudCtrl.index)
