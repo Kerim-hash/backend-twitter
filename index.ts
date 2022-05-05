@@ -22,8 +22,7 @@ import { UserCtrl } from './controllers/UserController'
 import { MessageCtrl } from './controllers/Message';
 import { ConversationCtrl } from './controllers/Conversation';
 
-// routes
-
+// routes // 
 //  User
 app.get('/users', passport.authenticate('jwt', { session: false }), UserCtrl.index)
 app.put('/users/update/', passport.authenticate('jwt'),  UserCtrl.update)
@@ -64,5 +63,6 @@ app.get('/message/:conversationId',  MessageCtrl.show)
 
 let port = process.env.PORT || 5000
 app.listen(port, () => {
-        console.log(port)
+
+        console.log('port')
 })
