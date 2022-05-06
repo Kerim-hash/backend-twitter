@@ -1,7 +1,7 @@
 import express from 'express';
 import cloudinary from "../core/cloudinary"
 
-class UploudController {
+class UploadController {
     async index(req: express.Request, res: express.Response): Promise<void> {
         const file = req.file
         await cloudinary.v2.uploader.upload_stream({resource_auto: 'auto'}, function (err, result) {
@@ -22,4 +22,4 @@ class UploudController {
 }
 
 
-export const UploudCtrl = new UploudController()
+export const UploadCtrl = new UploadController()

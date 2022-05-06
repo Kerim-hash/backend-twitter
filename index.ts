@@ -17,7 +17,7 @@ app.use(passport.initialize());
 app.use(cors())
 // require routes
 import { TweetsCtrl } from './controllers/TweetsController';
-import { UploudCtrl } from './controllers/UploudImg';
+import { UploadCtrl } from './controllers/UploadImg';
 import { UserCtrl } from './controllers/UserController'
 import { MessageCtrl } from './controllers/Message';
 import { ConversationCtrl } from './controllers/Conversation';
@@ -51,7 +51,7 @@ app.post('/tweet/comment/:id', passport.authenticate('jwt'), TweetsCtrl.addNewCo
 app.patch('/tweet/like/:id', passport.authenticate('jwt'), TweetsCtrl.like)
 
 // Uploud
-app.post('/uploud', upload.single("image"), UploudCtrl.index)
+app.post('/upload', upload.single("image"), UploadCtrl.index)
 // conversation
 app.post('/conversation',  ConversationCtrl.index)
 app.get('/conversation/:userId',  ConversationCtrl.show)
